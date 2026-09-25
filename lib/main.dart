@@ -3,73 +3,89 @@ import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 
-// Entry point ng app — dito nagsisimula ang execution
+// Entry point ng app
 void main() {
-  runApp(const MatrixAuthApp());
+  runApp(const CozyCafeApp());
 }
 
-class MatrixAuthApp extends StatelessWidget {
-  const MatrixAuthApp({super.key});
+// Shared color palette — cozy lo-fi cafe theme (cream + warm brown)
+// Ginagamit ito sa lahat ng 3 screens para consistent lahat ng design
+class AppColors {
+  static const background = Color(0xFFF3EAE0);
+  static const surface = Color(0xFFE9DCC8);
+  static const accent = Color(0xFFA9714B);
+  static const accentDark = Color(0xFF8B5E3C);
+  static const textDark = Color(0xFF4A3728);
+  static const textMuted = Color(0xFF9C8567);
+}
+
+class CozyCafeApp extends StatelessWidget {
+  const CozyCafeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Matrix Auth App',
+      title: 'Cozy Cafe App',
       debugShowCheckedModeBanner: false,
 
-      // Global theme — "Matrix" look: black background, green accents, mono font
+      // Global theme — cozy lo-fi look: cream bg, brown accents,
+      // rounded/pill-shaped fields and buttons
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFF000000),
-        primaryColor: const Color(0xFF00FF41), // classic "Matrix green"
+        scaffoldBackgroundColor: AppColors.background,
+        primaryColor: AppColors.accent,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00FF41),
-          brightness: Brightness.dark,
+          seedColor: AppColors.accent,
+          brightness: Brightness.light,
         ),
-        fontFamily: 'monospace',
+        fontFamily: 'Georgia',
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: const Color(0xFF0D0D0D),
-          labelStyle: const TextStyle(color: Color(0xFF00FF41)),
-          hintStyle: TextStyle(color: const Color(0xFF00FF41).withOpacity(0.4)),
+          fillColor: AppColors.surface,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+          hintStyle: const TextStyle(color: AppColors.textMuted),
+          labelStyle: const TextStyle(color: AppColors.textDark),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
+          ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF00FF41), width: 1),
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF00FF41), width: 2),
+            borderRadius: BorderRadius.circular(30),
+            borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: const BorderSide(color: Colors.redAccent, width: 1.2),
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF00FF41),
-            foregroundColor: Colors.black,
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            backgroundColor: AppColors.accent,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: const StadiumBorder(),
+            elevation: 0,
             textStyle: const TextStyle(
-              fontFamily: 'monospace',
-              fontWeight: FontWeight.bold,
               fontSize: 16,
-              letterSpacing: 1.2,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
             ),
           ),
         ),
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Color(0xFF00FF41)),
-          bodyMedium: TextStyle(color: Color(0xFF00FF41)),
+          bodyLarge: TextStyle(color: AppColors.textDark),
+          bodyMedium: TextStyle(color: AppColors.textDark),
         ),
       ),
 
       // Initial screen pag nag-launch ang app
       initialRoute: '/login',
 
-      // Named routes — dito nakalista lahat ng screens na pwedeng puntahan
-      // gamit ang Navigator.pushNamed(context, '/routeName')
+      // Named routes
       routes: {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignUpScreen(),

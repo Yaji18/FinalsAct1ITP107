@@ -1,108 +1,163 @@
 import 'package:flutter/material.dart';
-import '../widgets/matrix_rain_background.dart';
+import '../main.dart';
+import '../widgets/cozy_background.dart';
+
+// Simple data model para sa bawat menu item
+class _MenuItem {
+  final String name;
+  final String price;
+  final String image;
+  const _MenuItem(this.name, this.price, this.image);
+}
+
+const List<_MenuItem> _menuItems = [
+  _MenuItem('Avocado Toast w/ Egg', '5.00', 'assets/images/avocado_toast.jpg'),
+  _MenuItem('Matcha Latte', '4.50', 'assets/images/matcha_latte.jpg'),
+  _MenuItem('Cheesecake', '2.50', 'assets/images/cheesecake.jpg'),
+  _MenuItem('Hot Latte', '5.00', 'assets/images/hot_latte.jpg'),
+  _MenuItem('Iced Latte', '4.00', 'assets/images/iced_latte.jpg'),
+];
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Kinukuha natin dito yung argument na ipinasa papunta sa route na 'to.
-    // Galing ito sa Sign-Up screen (buong pangalan) o sa Login screen
-    // (email/username), depende kung saan nanggaling ang user.
+    // Kinukuha yung name/username na ipinasa via route arguments
+    // galing Sign-Up (buong pangalan) o Login (username)
     final args = ModalRoute.of(context)?.settings.arguments;
     final String displayName =
-        (args is String && args.trim().isNotEmpty) ? args.trim() : 'User';
+        (args is String && args.trim().isNotEmpty) ? args.trim() : 'friend';
 
     return Scaffold(
-      body: MatrixRainBackground(
+      body: CozyBackground(
         child: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Column(
+          children: [
+            // Header: welcome message + logout button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.65),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color(0xFF00FF41).withOpacity(0.4),
+                  Expanded(
+                    child: Text(
+                      'Welcome,\n$displayName',
+                      style: const TextStyle(
+                        color: AppColors.textDark,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.check_circle_outline,
-                          color: Color(0xFF00FF41),
-                          size: 56,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          '> access granted',
-                          style: TextStyle(
-                            color: const Color(0xFF00FF41).withOpacity(0.6),
-                            fontSize: 14,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Welcome message — dito ipinapakita yung name na
-                        // ipinasa via route arguments
-                        Text(
-                          'Welcome, $displayName!',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color(0xFF00FF41),
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'You have successfully entered the Matrix.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: const Color(0xFF00FF41).withOpacity(0.7),
-                            fontSize: 14,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-
-                        // Logout button — navigates back to Login screen
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // pushReplacementNamed papunta ulit sa Login,
-                              // at buburahin nito lahat ng naunang routes sa
-                              // stack (Home, Sign-Up) gamit ang predicate na
-                              // "(route) => false" — para hindi na mabalikan
-                              // ang Home screen gamit ang back button pagkatapos
-                              // mag-logout.
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/login',
-                                (route) => false,
-                              );
-                            },
-                            icon: const Icon(Icons.logout),
-                            label: const Text('LOGOUT'),
-                          ),
-                        ),
-                      ],
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColors.surface,
+                      foregroundColor: AppColors.accentDark,
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                    ),
+                    onPressed: () {
+                      // Buburahin ang buong navigation stack pabalik sa
+                      // Login — hindi na mababalikan ang Home gamit ang back
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/login',
+                        (route) => false,
+                      );
+                    },
+                    child: const Text(
+                      'Logout',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+
+            // Menu list
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                itemCount: _menuItems.length,
+                itemBuilder: (context, index) {
+                  final item = _menuItems[index];
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon avatar (stand-in for a food photo)
+                                              ClipOval(
+                          child: Image.asset(
+                            item.image,
+                            width: 64,
+                            height: 64,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 22),
+
+                        // Name
+                        Expanded(
+                          child: Text(
+                            item.name,
+                            style: const TextStyle(
+                              color: AppColors.textDark,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+
+                                               // Price tag — clickable, magpapakita ng purchase confirmation
+                        GestureDetector(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    '${item.name} purchased successfully!'),
+                                backgroundColor: AppColors.accentDark,
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.accent,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              '\$${item.price}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
         ),
       ),
     );

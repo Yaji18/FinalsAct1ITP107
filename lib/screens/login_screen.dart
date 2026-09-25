@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/matrix_rain_background.dart';
+import '../main.dart';
+import '../widgets/cozy_background.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,29 +10,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // GlobalKey para sa Form — ito ang gagamitin natin para i-validate
-  // lahat ng fields bago mag-navigate
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _obscurePassword = true;
 
   @override
   void dispose() {
-    // Laging i-dispose ang controllers para maiwasan ang memory leaks
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   void _handleLogin() {
-    // Validate muna bago mag-proceed — kung may empty field, hindi tuloy
     if (_formKey.currentState!.validate()) {
-      // pushReplacementNamed = pinapalitan ang Login screen sa stack
-      // (hindi na babalikan pag pinindot ang back button — tama ito para
-      // sa login, kasi ayaw natin bumalik sa login screen after mag-login)
+      // pushReplacementNamed — pinapalitan ang Login sa stack, hindi na
+      // babalikan ng back button pagkatapos mag-login
       Navigator.pushReplacementNamed(
         context,
         '/home',
@@ -43,157 +37,155 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MatrixRainBackground(
+      body: CozyBackground(
         child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // App logo / title area
-                    const Icon(
-                      Icons.lock_outline,
-                      color: Color(0xFF00FF41),
-                      size: 60,
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'LOGIN TO MATRIX',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFF00FF41),
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'monospace',
-                        letterSpacing: 4,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '> welcome back, user',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: const Color(0xFF00FF41).withOpacity(0.6),
-                        fontSize: 14,
-                        fontFamily: 'monospace',
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Card container para mas readable yung form kahit
-                    // may animated background
-                    Container(
-                      padding: const EdgeInsets.all(20),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Decorative avatar circle sa itaas
+                  Center(
+                    child: Container(
+                      width: 140,
+                      height: 140,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.65),
-                        borderRadius: BorderRadius.circular(12),
+                        shape: BoxShape.circle,
+                        color: AppColors.surface,
                         border: Border.all(
-                          color: const Color(0xFF00FF41).withOpacity(0.4),
+                          color: AppColors.accent.withValues(alpha: 0.3),
+                          width: 2,
                         ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // Email / username field
-                          TextFormField(
-                            controller: _emailController,
-                            style: const TextStyle(color: Color(0xFF00FF41)),
-                            decoration: const InputDecoration(
-                              labelText: 'Email / Username',
-                              prefixIcon:
-                                  Icon(Icons.person, color: Color(0xFF00FF41)),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter your email or username';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Password field
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _obscurePassword,
-                            style: const TextStyle(color: Color(0xFF00FF41)),
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: const Icon(Icons.lock,
-                                  color: Color(0xFF00FF41)),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color: const Color(0xFF00FF41),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 24),
-
-                          // Login button — navigates to Home screen
-                          ElevatedButton(
-                            onPressed: _handleLogin,
-                            child: const Text('LOGIN'),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.accentDark.withValues(alpha: 0.15),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Link papunta sa Sign-Up screen
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Don't have an account?",
-                          style: TextStyle(
-                            color: const Color(0xFF00FF41).withOpacity(0.7),
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // pushNamed = idinadagdag lang sa stack, kaya
-                            // pwede pa ring bumalik gamit ang back/pop
-                            Navigator.pushNamed(context, '/signup');
-                          },
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              color: Color(0xFF00FF41),
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
+                            child: ClipOval(
+                              child: Image.asset(
+                                'assets/images/login_icon.jpg',
+                                width: 140,
+                                height: 140,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Title — cozy script-style heading
+                  const Text(
+                    'Login',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.textDark,
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Username / email field
+                  TextFormField(
+                    controller: _emailController,
+                    style: const TextStyle(color: AppColors.textDark),
+                    decoration: const InputDecoration(
+                      hintText: 'Username',
+                      prefixIcon: Icon(Icons.person_outline,
+                          color: AppColors.accentDark),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter your username';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Password field
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    style: const TextStyle(color: AppColors.textDark),
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      prefixIcon: const Icon(Icons.lock_outline,
+                          color: AppColors.accentDark),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: AppColors.accentDark,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 28),
+
+                  // Login button
+                  ElevatedButton(
+                    onPressed: _handleLogin,
+                    child: const Text('Sign In'),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Link papunta sa Sign-Up
+                  Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      "Don't have an account? ",
+      style: TextStyle(
+        color: AppColors.textDark.withValues(alpha: 0.75),
+        fontSize: 14,
+      ),
+    ),
+    GestureDetector(
+      onTap: () {
+        // pushNamed — pwede pa ring bumalik gamit ang pop
+        Navigator.pushNamed(context, '/signup');
+      },
+      child: const Text(
+        'Sign Up',
+        style: TextStyle(
+          color: AppColors.accentDark,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+    ),
+  ],
+),
+                ],
               ),
             ),
           ),
+        ),
         ),
       ),
     );
