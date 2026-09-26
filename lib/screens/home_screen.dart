@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../main.dart';
 import '../widgets/cozy_background.dart';
 
@@ -23,8 +24,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Kinukuha yung name/username na ipinasa via route arguments
-    // galing Sign-Up (buong pangalan) o Login (username)
     final args = ModalRoute.of(context)?.settings.arguments;
     final String displayName =
         (args is String && args.trim().isNotEmpty) ? args.trim() : 'friend';
@@ -32,132 +31,140 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: CozyBackground(
         child: SafeArea(
-        child: Column(
-          children: [
-            // Header: welcome message + logout button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Welcome,\n$displayName',
-                      style: const TextStyle(
-                        color: AppColors.textDark,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        height: 1.2,
+          child: Column(
+            children: [
+              // Header: welcome message + logout button
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Welcome,\n$displayName',
+                        style: GoogleFonts.playfairDisplay(
+                          color: AppColors.textDark,
+                          fontSize: 26,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w600,
+                          height: 1.2,
+                        ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: AppColors.surface,
-                      foregroundColor: AppColors.accentDark,
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.surface,
+                        foregroundColor: AppColors.accentDark,
+                        shape: const StadiumBorder(),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/login',
+                          (route) => false,
+                        );
+                      },
+                      child: Text(
+                        'Logout',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                     ),
-                    onPressed: () {
-                      // Buburahin ang buong navigation stack pabalik sa
-                      // Login — hindi na mababalikan ang Home gamit ang back
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/login',
-                        (route) => false,
-                      );
-                    },
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            // Menu list
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                itemCount: _menuItems.length,
-                itemBuilder: (context, index) {
-                  final item = _menuItems[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon avatar (stand-in for a food photo)
-                                              ClipOval(
-                          child: Image.asset(
-                            item.image,
-                            width: 64,
-                            height: 64,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 22),
-
-                        // Name
-                        Expanded(
-                          child: Text(
-                            item.name,
-                            style: const TextStyle(
-                              color: AppColors.textDark,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+              // Menu list
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                  itemCount: _menuItems.length,
+                  itemBuilder: (context, index) {
+                    final item = _menuItems[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          // Food/drink photo
+                          ClipOval(
+                            child: Image.asset(
+                              item.image,
+                              width: 64,
+                              height: 64,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ),
+                          const SizedBox(width: 22),
 
-                                               // Price tag — clickable, magpapakita ng purchase confirmation
-                        GestureDetector(
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    '${item.name} purchased successfully!'),
-                                backgroundColor: AppColors.accentDark,
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: AppColors.accent,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                          // Name
+                          Expanded(
                             child: Text(
-                              '\$${item.price}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                              item.name,
+                              style: GoogleFonts.poppins(
+                                color: AppColors.textDark,
+                                fontSize: 16,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+
+                          // Price tag — clickable, magpapakita ng purchase confirmation
+                          GestureDetector(
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${item.name} purchased successfully!',
+                                    style: GoogleFonts.poppins(
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                  backgroundColor: AppColors.accentDark,
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: AppColors.accent,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                '\$${item.price}',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../main.dart';
 import '../widgets/cozy_background.dart';
 
@@ -24,8 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      // pushReplacementNamed — pinapalitan ang Login sa stack, hindi na
-      // babalikan ng back button pagkatapos mag-login
       Navigator.pushReplacementNamed(
         context,
         '/home',
@@ -39,153 +38,162 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: CozyBackground(
         child: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Decorative avatar circle sa itaas
-                  Center(
-                    child: Container(
-                      width: 140,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.surface,
-                        border: Border.all(
-                          color: AppColors.accent.withValues(alpha: 0.3),
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.accentDark.withValues(alpha: 0.15),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
+          child: Center(
+            child: SingleChildScrollView(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Decorative avatar circle sa itaas
+                    Center(
+                      child: Container(
+                        width: 140,
+                        height: 140,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.surface,
+                          border: Border.all(
+                            color: AppColors.accent.withValues(alpha: 0.3),
+                            width: 2,
                           ),
-                        ],
-                      ),
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/login_icon.jpg',
-                                width: 140,
-                                height: 140,
-                                fit: BoxFit.cover,
-                              ),
+                          boxShadow: [
+                            BoxShadow(
+                              color:
+                                  AppColors.accentDark.withValues(alpha: 0.15),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
                             ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Title — cozy script-style heading
-                  const Text(
-                    'Login',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textDark,
-                      fontSize: 40,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Username / email field
-                  TextFormField(
-                    controller: _emailController,
-                    style: const TextStyle(color: AppColors.textDark),
-                    decoration: const InputDecoration(
-                      hintText: 'Username',
-                      prefixIcon: Icon(Icons.person_outline,
-                          color: AppColors.accentDark),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Password field
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    style: const TextStyle(color: AppColors.textDark),
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      prefixIcon: const Icon(Icons.lock_outline,
-                          color: AppColors.accentDark),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                          color: AppColors.accentDark,
+                          ],
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                        child: ClipOval(
+                          child: Image.asset(
+                            'assets/images/login_icon.jpg',
+                            width: 140,
+                            height: 140,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 28),
+                    const SizedBox(height: 24),
 
-                  // Login button
-                  ElevatedButton(
-                    onPressed: _handleLogin,
-                    child: const Text('Sign In'),
-                  ),
-                  const SizedBox(height: 18),
+                    // Title — cozy script-style heading
+                    Text(
+                      'Login',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.playfairDisplay(
+                        color: AppColors.textDark,
+                        fontSize: 42,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
 
-                  // Link papunta sa Sign-Up
-                  Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Text(
-      "Don't have an account? ",
-      style: TextStyle(
-        color: AppColors.textDark.withValues(alpha: 0.75),
-        fontSize: 14,
-      ),
-    ),
-    GestureDetector(
-      onTap: () {
-        // pushNamed — pwede pa ring bumalik gamit ang pop
-        Navigator.pushNamed(context, '/signup');
-      },
-      child: const Text(
-        'Sign Up',
-        style: TextStyle(
-          color: AppColors.accentDark,
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-          decoration: TextDecoration.underline,
-        ),
-      ),
-    ),
-  ],
-),
-                ],
+                    // Username / email field
+                    TextFormField(
+                      controller: _emailController,
+                      style: GoogleFonts.poppins(
+                        color: AppColors.textDark,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Username',
+                        prefixIcon: const Icon(Icons.person_outline,
+                            color: AppColors.accentDark),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Password field
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      style: GoogleFonts.poppins(
+                        color: AppColors.textDark,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        prefixIcon: const Icon(Icons.lock_outline,
+                            color: AppColors.accentDark),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: AppColors.accentDark,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 28),
+
+                    // Login button
+                    ElevatedButton(
+                      onPressed: _handleLogin,
+                      child: const Text('Sign In'),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Link papunta sa Sign-Up
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: GoogleFonts.poppins(
+                            color: AppColors.textDark.withValues(alpha: 0.75),
+                            fontSize: 14,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                          child: Text(
+                            'Sign Up',
+                            style: GoogleFonts.poppins(
+                              color: AppColors.accentDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              fontStyle: FontStyle.italic,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         ),
       ),
     );

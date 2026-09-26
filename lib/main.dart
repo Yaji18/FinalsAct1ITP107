@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
@@ -29,7 +30,7 @@ class CozyCafeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // Global theme — cozy lo-fi look: cream bg, brown accents,
-      // rounded/pill-shaped fields and buttons
+      // rounded/pill-shaped fields and buttons, aesthetic italic fonts
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
         primaryColor: AppColors.accent,
@@ -37,14 +38,20 @@ class CozyCafeApp extends StatelessWidget {
           seedColor: AppColors.accent,
           brightness: Brightness.light,
         ),
-        fontFamily: 'Georgia',
+        textTheme: GoogleFonts.poppinsTextTheme(),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: AppColors.surface,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-          hintStyle: const TextStyle(color: AppColors.textMuted),
-          labelStyle: const TextStyle(color: AppColors.textDark),
+          hintStyle: GoogleFonts.poppins(
+            color: AppColors.textMuted,
+            fontStyle: FontStyle.italic,
+          ),
+          labelStyle: GoogleFonts.poppins(
+            color: AppColors.textDark,
+            fontStyle: FontStyle.italic,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide.none,
@@ -69,18 +76,23 @@ class CozyCafeApp extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: const StadiumBorder(),
             elevation: 0,
-            textStyle: const TextStyle(
+            textStyle: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
               letterSpacing: 0.5,
             ),
           ),
         ),
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: AppColors.textDark),
-          bodyMedium: TextStyle(color: AppColors.textDark),
-        ),
       ),
+
+      // Ginagawang italic ang lahat ng Text widgets sa buong app
+      builder: (context, child) {
+        return DefaultTextStyle.merge(
+          style: const TextStyle(fontStyle: FontStyle.italic),
+          child: child!,
+        );
+      },
 
       // Initial screen pag nag-launch ang app
       initialRoute: '/login',
